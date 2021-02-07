@@ -81,15 +81,16 @@
                     </a>
                 </li>
 
+                @can('user-list|role-list')
                 <li class="app-sidebar__heading">Pengaturan</li>
-
                 <li>
                     <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users*') ? 'mm-active' : '' }}">
                         <i class="metismenu-icon pe-7s-users"></i>
                         Users
                     </a>
                 </li>
-                @can('role-list')
+                {{-- @endcan
+                @can('role-list') --}}
                 <li>
                     <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles*') ? 'mm-active' : '' }}">
                         <i class="metismenu-icon pe-7s-door-lock"></i>

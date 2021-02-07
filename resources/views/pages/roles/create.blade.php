@@ -34,7 +34,21 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group">
+                        <label for="">Permission</label>
+                        <div class="position-relative form-group">
+                            <div>
+                                @foreach($permission as $value)
+                                <div class="custom-checkbox custom-control custom-control-inline">
+                                    {{-- <input type="checkbox" id="exampleCustomInline" class="custom-control-input"> --}}
+                                    <label class="custom-control-label">{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name custom-control-input')) }}
+                                    {{-- <label class="custom-control-label" for="exampleCustomInline"> --}}
+                                        {{ $value->name }}
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        {{-- <div class="form-group">
                         <label for="">Permission</label>
                         <br/>
                         @foreach($permission as $value)
@@ -42,7 +56,7 @@
                         {{ $value->name }}</label>
                         <br/>
                         @endforeach
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

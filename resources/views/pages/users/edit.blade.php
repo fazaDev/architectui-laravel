@@ -43,6 +43,9 @@
                         <div class="form-group">
                         <label for="">Password</label>
                         {!! Form::password('password', array('placeholder' => 'Password','class' => 'form-control')) !!}
+                            <div class="text-danger">
+                                Leave blank if password don't change.
+                            </div>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
