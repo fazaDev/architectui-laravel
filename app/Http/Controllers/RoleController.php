@@ -22,6 +22,14 @@ class RoleController extends Controller
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
+    public function getRoles()
+    {
+        $roles = Role::all();
+        $permissions = Permission::all();
+
+        return view('pages.roles.index2', compact('roles', 'permissions'));
+    }
+
     /**
      * Display a listing of the resource.
      *

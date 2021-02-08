@@ -30,5 +30,6 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::resource('/users', UserController::class);
+    Route::get('/roles-permissions', [RoleController::class, 'getRoles'])->name('roles-permissions');
     Route::resource('/roles', RoleController::class);
 });
