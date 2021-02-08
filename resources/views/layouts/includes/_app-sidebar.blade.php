@@ -94,7 +94,7 @@
                 <li>
                     <a href="{{ route('roles.index') }}" class="{{ request()->routeIs('roles*') ? 'mm-active' : '' }}">
                         <i class="metismenu-icon pe-7s-door-lock"></i>
-                        Roles
+                        Roles and Permissions
                     </a>
                 </li>
                 @endcan

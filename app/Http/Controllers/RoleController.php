@@ -66,14 +66,11 @@ class RoleController extends Controller
     {
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
-            'permission' => 'required',
         ]);
 
-        $role = Role::create([
+        Role::create([
             'name' => $request->input('name')
         ]);
-
-        $role->syncPermissions($request->input('permission'));
 
         return redirect()->route('roles.index')->with('success', 'Role created successfully!');
     }
@@ -87,11 +84,13 @@ class RoleController extends Controller
     public function show($id)
     {
         $role = Role::findOrFail($id);
-        $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
-            ->where("role_has_permissions.role_id", $id)
-            ->get();
+        $permission = Permission::get();
+        $rolePermissions = DB::table('role_has_permissions')
+            ->where('role_has_permissions.role_id', $id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
+            ->all();
 
-        return view('pages.roles.show', compact('role', 'rolePermissions'));
+        return view('pages.roles.show', compact('role', 'permission', 'rolePermissions'));
     }
 
     /**
@@ -121,16 +120,21 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
-        ]);
-        $role = Role::findOrFail($id);
-        $role->name = $request->input('name');
-        $role->save();
-        $role->syncPermissions($request->input('permission'));
+        if ($role = Role::findOrFail($id)) {
+            // cek role, jika super admin berikan akses semua permission
+            if ($role->name == 'Super Admin') {
+                $role->syncPermissions(Permission::all());
+                return redirect()->route('roles.index')->with('success', 'Role Super Admin updated successfully!');
+            }
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
+            $permissions = $request->get('permissions', []);
+            $role->syncPermissions($permissions);
+            return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
+        } else {
+            return redirect()->route('roles.index')->with('error', 'Role not found!');
+        }
+
+        return redirect()->back();
     }
 
     /**

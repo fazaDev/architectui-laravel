@@ -23,54 +23,40 @@
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
-            <div class="card-header">Edit Role</div>
+        <div class="card-header">{{ $role->name }}</div>
             {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="form-group">
-                        <label for="">Name</label>
-                        {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <label for="">Permission</label>
-                        <div class="position-relative form-group">
-                            <div>
-                                @foreach($permission as $value)
-                                <div class="custom-checkbox custom-control custom-control-inline">
-                                    {{-- <input type="checkbox" id="exampleCustomInline" class="custom-control-input"> --}}
-                                    <label class="custom-control-label">
-                                        {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name custom-control-input')) }}
-                                    {{-- <label class="custom-control-label" for="exampleCustomInline"> --}}
-                                        {{ $value->name }}
-                                    </label>
-                                </div>
-                                @endforeach
+                    @foreach($permission as $perm)
+                        @php
+                            $perm_found = null;
+
+                            if(isset($role)) {
+                                $perm_found = $role->hasPermissionTo($perm->name);
+                            }
+
+                            if(isset($user)) {
+                                $perm_found = $user->hasDirectPermission($perm->name);
+                            }
+                        @endphp
+
+                        <div class="col-md-3">
+                            <div class="checkbox">
+                                <label class="{{ str_contains($perm->name, 'delete') ? 'text-danger' : '' }}">
+                                {!! Form::checkbox("permissions[]", $perm->name, $perm_found, isset($options) ? $options : []) !!} {{ $perm->name }}
+                                </label>
                             </div>
                         </div>
-                        <div class="form-group">
-                        <label for="">Permission</label>
-                        <br/>
-                        @foreach($permission as $value)
-                        <label>
-                            <label>
-                                {{ Form::checkbox('permission[]', $value->id, in_array($value->id, $rolePermissions) ? true : false, array('class' => 'name')) }}
-                                {{ $value->name }}
-                            </label>
-                        <br/>
-                        @endforeach
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-            <div class="d-block text-left card-footer">
-                {{-- <button class="mr-2 btn-icon btn-icon-only btn btn-outline-danger"><i class="pe-7s-trash btn-icon-wrapper"> </i></button> --}}
-                <button type="submit" class="btn-wide btn btn-primary"><i class="pe-7s-paper-plane"></i> Update</button>
+            <div class="card-footer">
+                @can('role-edit')
+                        {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
+                @endcan
             </div>
             {!! Form::close() !!}
         </div>
     </div>
 </div>
-
 @endsection

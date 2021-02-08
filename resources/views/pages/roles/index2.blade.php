@@ -14,18 +14,17 @@
             </div>
         </div>
         <div class="page-title-actions">
-            {{-- @can('role-create')
+            @can('role-create')
             <a class="btn-shadow mr-3 btn btn-dark" href="{{ route('roles.create') }}"><i class="fa fa-plus"></i> Create new role</a>
-            @endcan --}}
+            @endcan
         </div>
     </div>
 </div>
 
 
 <div class="row">
-
-    <div class="col-md-12">
-        @foreach($roles as $role)
+    @foreach($roles as $role)
+    <div class="col-lg-12 col-md-12">
         {!! Form::model($role, ['method' => 'PUT', 'route' => ['roles.update',  $role->id ], 'class' => 'm-b']) !!}
         @if($role->name == 'Super Admin')
             @include('pages.roles._permissions', [
@@ -44,8 +43,8 @@
             @endcan --}}
         @endif
         {!! Form::close() !!}
-        @endforeach
     </div>
+    @endforeach
 </div>
 
 @endsection

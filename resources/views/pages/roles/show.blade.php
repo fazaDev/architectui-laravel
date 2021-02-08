@@ -21,12 +21,34 @@
 
 
 <div class="row">
+
     <div class="col-md-12">
         <div class="main-card mb-3 card">
-            <div class="card-header">Show Role</div>
+            <div class="card-header">{{ $role->name }}</div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12">
+                    @foreach($permission as $perm)
+                        @php
+                            $perm_found = null;
+
+                            if(isset($role)) {
+                                $perm_found = $role->hasPermissionTo($perm->name);
+                            }
+
+                            if(isset($user)) {
+                                $perm_found = $user->hasDirectPermission($perm->name);
+                            }
+                        @endphp
+
+                        <div class="col-md-3">
+                            <div class="checkbox">
+                                <label class="{{ str_contains($perm->name, 'delete') ? 'text-danger' : '' }}">
+                                {!! Form::checkbox("permissions[]", $perm->name, $perm_found, isset($options) ? $options : ['disabled']) !!} {{ $perm->name }}
+                            </label>
+                            </div>
+                        </div>
+                    @endforeach
+                    {{-- <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                         <label for="">Name</label>
                         {{ $role->name }}
@@ -39,12 +61,11 @@
                         @if(!empty($rolePermissions))
                             @foreach($rolePermissions as $v)
                                 <div class="mb-2 mr-2 badge badge-success">{{ $v->name }}</div>
-                                {{-- <label class="label label-success">{{ $v->name }}</label> --}}
                             <br/>
                             @endforeach
                         @endif
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="d-block text-left card-footer">

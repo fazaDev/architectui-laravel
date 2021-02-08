@@ -25,11 +25,11 @@
             @endforeach
         </div>
     </div>
+    @if(isset($showButton) ? $showButton : false)
     <div class="card-footer">
-        @if(isset($showButton) ? $showButton : false)
         @can('role-edit')
-                {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                {!! Form::submit('Update', ['class' => 'btn btn-primary']) !!}
         @endcan
-        @endif
     </div>
+    @endif
 </div>
